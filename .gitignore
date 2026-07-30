@@ -1,0 +1,5 @@
+node_modules
+.next
+.env.local
+.local-token-store.json
+.DS_Store
