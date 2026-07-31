@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { getTokens, storageBackend } from "@/lib/tokenStore";
 
+export const dynamic = "force-dynamic";
+
 export async function GET() {
   const tokens = await getTokens();
   return NextResponse.json({
