@@ -22,6 +22,10 @@ issues from a GitHub repo and posts a formatted digest to a Slack channel.
   serverless cold starts without living in env vars.
 - No user/tenant model, per the brief — there's exactly one global
   connection slot per system (one GitHub token, one Slack token, shared).
+- Both OAuth flows use a `state` parameter (random UUID, stored in a
+  short-lived httpOnly cookie and verified on callback) to prevent CSRF —
+  without it, an attacker could trick the app into linking an account
+  they control instead of the intended one.
 
 ## Running locally
 
@@ -44,38 +48,46 @@ curl "http://localhost:3000/api/webhook?repo=owner/name&channel=C0123456789&labe
 **GitHub** — https://github.com/settings/developers → New OAuth App
 - Homepage URL: your deployed URL (or `http://localhost:3000` for local-only testing)
 - Authorization callback URL: `{URL}/api/auth/github/callback`
+- Note: classic GitHub OAuth Apps only support a single callback URL each
+  (unlike Slack, which allows multiple redirect URLs on one app). If you
+  want both local dev and a deployed instance working at once, register
+  two separate GitHub OAuth Apps — one per callback URL — and use each
+  one's Client ID/Secret in the matching environment's env vars. This repo
+  does exactly that: one app for `localhost:3000`, one for the Vercel URL.
 
 **Slack** — https://api.slack.com/apps → Create New App
 - Add bot scopes: `chat:write`, `channels:read`, `groups:read`
-- OAuth Redirect URL: `{URL}/api/auth/slack/callback`
+- OAuth Redirect URL: `{URL}/api/auth/slack/callback` (add both your local
+  and deployed URLs here — Slack apps support multiple redirect URLs)
 - Install the app to your workspace, and invite the bot to whichever
   channel you want digests posted to (`/invite @YourAppName`)
 
 ## Live deployment
 
-Deployed at: **`{FILL IN AFTER DEPLOY — e.g. https://github-slack-digest.vercel.app}`**
+Deployed at: **https://github-slack-digest.vercel.app**
 
 Hit the live endpoint directly:
 
 ```
-GET https://{your-app}.vercel.app/api/webhook?repo=vercel/next.js&channel=C0123456789
+GET https://github-slack-digest.vercel.app/api/webhook?repo=oven-sh/bun&channel=C0123456789
 ```
 
 Example response:
 
 ```json
 {
+  "status": 200,
   "ok": true,
-  "repo": "vercel/next.js",
+  "repo": "oven-sh/bun",
   "label": null,
   "channel": "C0123456789",
-  "issuesFound": 8,
-  "issuesPosted": 8,
+  "issuesFound": 5,
+  "issuesPosted": 5,
   "issues": [
-    { "number": 1234, "title": "Example issue", "url": "https://github.com/...", "author": "someuser" }
+    { "number": 36494, "title": "Example issue title", "url": "https://github.com/oven-sh/bun/issues/36494", "author": "someuser" }
   ],
-  "slackMessageTs": "1234567890.123456",
-  "triggeredAt": "2026-07-30T05:00:00.000Z"
+  "slackMessageTs": "1785466767.018659",
+  "triggeredAt": "2026-07-31T02:59:27.054Z"
 }
 ```
 
