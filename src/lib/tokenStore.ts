@@ -62,7 +62,7 @@ async function kvSet(tokens: StoredTokens): Promise<void> {
       Authorization: `Bearer ${KV_TOKEN}`,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(JSON.stringify(tokens)),
+    body: JSON.stringify(tokens),
   });
 }
 
