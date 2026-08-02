@@ -75,12 +75,18 @@ below, a real working channel ID in the already-connected Slack workspace:
 GET https://github-slack-digest.vercel.app/api/webhook?repo=oven-sh/bun&channel=C0BM51MUZQU
 ```
 
-`repo` can be swapped for any public GitHub repo. This uses my existing
-GitHub/Slack connections, so it works immediately with no login required on
-your end. Happy to send an invite to that Slack workspace on request if
-you'd like to see the message land visually — the JSON response alone
-already confirms it posted (`slackMessageTs` is Slack's own success
-confirmation for the post).
+- `channel` — `C0BM51MUZQU` (a real channel ID in the connected workspace,
+  used in the example above)
+- `repo` — can be swapped for any public GitHub repo with open issues, e.g.:
+  - `oven-sh/bun`
+  - `zammad/zammad`
+  - `microsoft/vscode`
+
+This uses my existing GitHub/Slack connections, so it works immediately
+with no login required on your end. Happy to send an invite to that Slack
+workspace on request if you'd like to see the message land visually — the
+JSON response alone already confirms it posted (`slackMessageTs` is
+Slack's own success confirmation for the post).
 
 **Option B — prove the dynamic reconnection.** Visit the app root and click
 **Reconnect GitHub** / **Reconnect Slack** to point it at your own GitHub
