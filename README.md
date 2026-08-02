@@ -66,11 +66,20 @@ curl "http://localhost:3000/api/webhook?repo=owner/name&channel=C0123456789&labe
 
 Deployed at: **https://github-slack-digest.vercel.app**
 
-Hit the live endpoint directly:
+Hit the live endpoint directly — the channel below is a real, working channel
+ID in the connected Slack workspace, so this is copy-pasteable and will
+actually post:
 
 ```
-GET https://github-slack-digest.vercel.app/api/webhook?repo=oven-sh/bun&channel=C0123456789
+GET https://github-slack-digest.vercel.app/api/webhook?repo=oven-sh/bun&channel=C0BM51MUZQU
 ```
+
+`repo` can be swapped for any public GitHub repo. `channel` must stay a
+channel ID inside the connected workspace, since the Slack bot token is
+scoped to that one workspace (see Assumptions below) — happy to send an
+invite link to that workspace on request if you'd like to see the message
+land, though the JSON response alone already confirms it posted
+(`slackMessageTs` is Slack's own success confirmation).
 
 Example response:
 
