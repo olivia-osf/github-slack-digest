@@ -66,20 +66,29 @@ curl "http://localhost:3000/api/webhook?repo=owner/name&channel=C0123456789&labe
 
 Deployed at: **https://github-slack-digest.vercel.app**
 
-Hit the live endpoint directly — the channel below is a real, working channel
-ID in the connected Slack workspace, so this is copy-pasteable and will
-actually post:
+There are two ways to test it, depending on what you want to see:
+
+**Option A — zero setup.** Hit the live endpoint directly with the channel
+below, a real working channel ID in the already-connected Slack workspace:
 
 ```
 GET https://github-slack-digest.vercel.app/api/webhook?repo=oven-sh/bun&channel=C0BM51MUZQU
 ```
 
-`repo` can be swapped for any public GitHub repo. `channel` must stay a
-channel ID inside the connected workspace, since the Slack bot token is
-scoped to that one workspace (see Assumptions below) — happy to send an
-invite link to that workspace on request if you'd like to see the message
-land, though the JSON response alone already confirms it posted
-(`slackMessageTs` is Slack's own success confirmation).
+`repo` can be swapped for any public GitHub repo. This uses my existing
+GitHub/Slack connections, so it works immediately with no login required on
+your end. Happy to send an invite to that Slack workspace on request if
+you'd like to see the message land visually — the JSON response alone
+already confirms it posted (`slackMessageTs` is Slack's own success
+confirmation for the post).
+
+**Option B — prove the dynamic reconnection.** Visit the app root and click
+**Reconnect GitHub** / **Reconnect Slack** to point it at your own GitHub
+account and Slack workspace instead — this is the in-product flow described
+above, and directly demonstrates connecting to a different Slack/GitHub
+without a redeploy or config change. Note this replaces the current shared
+connection (there's no per-user/tenant concept, per the brief), so Option A
+won't work for anyone else until it's reconnected back.
 
 Example response:
 
